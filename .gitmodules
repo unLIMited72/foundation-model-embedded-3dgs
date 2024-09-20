@@ -4,3 +4,6 @@
 [submodule "third_party/simple-knn"]
 	path = third_party/simple-knn
 	url = https://gitlab.inria.fr/bkerbl/simple-knn.git
+[submodule "third_party/SIBR_viewers"]
+	path = third_party/SIBR_viewers
+	url = https://gitlab.inria.fr/sibr/sibr_core.git
