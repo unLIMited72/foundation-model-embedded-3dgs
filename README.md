@@ -58,7 +58,7 @@ Splatting for Holistic 3D Scene Understanding </h1>
 The repository contains submodules, thus please check it out with 
 ```shell
 # SSH
-git clone git@github.com:ZuoJiaxing/FMGS_OpenSource.git --recursive
+git clone https://github.com/googlestaging/foundation-model-embedded-3dgs.git --recursive
 # If you forgot to do --recursive
 git submodule update --init --recursive
 # Note that the simple-diff-gaussian-rasterization submodule for rendering high-dimensional feature map is already put in "submodules" directory. 
