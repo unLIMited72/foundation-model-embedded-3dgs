@@ -1,3 +1,7 @@
+This is not an officially supported Google product. This project is not
+eligible for the [Google Open Source Software Vulnerability Rewards
+Program](https://bughunters.google.com/open-source-security).
+
 <div align="center">
 <h1><b>FMGS</b>:Foundation Model Embedded 3D Gaussian
 Splatting for Holistic 3D Scene Understanding </h1>
