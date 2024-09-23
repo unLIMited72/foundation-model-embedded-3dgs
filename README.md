@@ -50,7 +50,7 @@ Splatting for Holistic 3D Scene Understanding </h1>
       author={Zuo, Xingxing and Samangouei, Pouya and Zhou, Yunwen and Di, Yan and Li, Mingyang},
       journal={arXiv preprint arXiv:2401.01970},
       year={2024},
-      url          = {https://xingxingzuo.github.io/fmgs/}
+      url={https://xingxingzuo.github.io/fmgs/}
 }</code></pre>
   </div>
 </section>
