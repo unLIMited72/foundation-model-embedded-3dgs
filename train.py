@@ -1,13 +1,16 @@
+# Copyright 2024 Google LLC
 #
-# Copyright (C) 2023, Inria
-# GRAPHDECO research group, https://team.inria.fr/graphdeco
-# All rights reserved.
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
 #
-# This software is free for non-commercial, research and evaluation use 
-# under the terms of the LICENSE.md file.
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
-# For inquiries contact  george.drettakis@inria.fr
-#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
 
 import os
 import torch
@@ -15,13 +18,13 @@ from random import randint
 from myutils.loss_utils import l1_loss, ssim, clip_loss, dino_loss, dotp_sim
 from gaussian_renderer import render, network_gui
 import sys
-from scene import Scene, GaussianModel
-from myutils.general_utils import safe_state
+from third_party.scene import Scene, GaussianModel
+from third_party.myutils.general_utils import safe_state
 import uuid
 from tqdm import tqdm
-from myutils.image_utils import psnr
+from third_party.myutils.image_utils import psnr
 from argparse import ArgumentParser, Namespace
-from arguments import ModelParams, PipelineParams, OptimizationParams
+from third_party.arguments import ModelParams, PipelineParams, OptimizationParams
 try:
     from torch.utils.tensorboard import SummaryWriter
     TENSORBOARD_FOUND = True

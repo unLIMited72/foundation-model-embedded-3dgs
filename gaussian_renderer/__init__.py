@@ -17,7 +17,7 @@ import math
 import numpy as np
 import matplotlib.pyplot as plt
 from diff_gaussian_rasterization import GaussianRasterizationSettings, GaussianRasterizer
-from scene.gaussian_model import GaussianModel
+from third_party.scene.gaussian_model import GaussianModel
 from myutils.sh_utils import eval_sh
 from lerf.lerf_fieldheadnames import LERFFieldHeadNames
 

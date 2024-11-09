@@ -13,20 +13,20 @@
 # limitations under the License.
 
 import torch
-from scene import Scene
+from third_party.scene import Scene
 import os
 from tqdm import tqdm
 from os import makedirs
 from gaussian_renderer import render
 import torchvision
-from myutils.general_utils import safe_state
+from third_party.myutils.general_utils import safe_state
 from argparse import ArgumentParser
-from arguments import ModelParams, PipelineParams, get_combined_args
+from third_party.arguments import ModelParams, PipelineParams, get_combined_args
 from gaussian_renderer import GaussianModel
-from myutils.system_utils import searchForMaxCKPTfile
+from third_party.myutils.system_utils import searchForMaxCKPTfile
 from lerf.lerf import LERFModel
 from lerf.encoders.openclip_encoder import OpenCLIPNetworkConfig, OpenCLIPNetwork
-from myutils.vis_lerf_utils import get_shown_feat_map, get_composited_relevancy_map
+from third_party.myutils.vis_lerf_utils import get_shown_feat_map, get_composited_relevancy_map
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt
