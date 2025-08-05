@@ -26,7 +26,7 @@ from gaussian_renderer import GaussianModel
 from third_party.myutils.system_utils import searchForMaxCKPTfile
 from lerf.lerf import LERFModel
 from lerf.encoders.openclip_encoder import OpenCLIPNetworkConfig, OpenCLIPNetwork
-from third_party.myutils.vis_lerf_utils import get_shown_feat_map, get_composited_relevancy_map
+from myutils.vis_lerf_utils import get_shown_feat_map, get_composited_relevancy_map
 import matplotlib
 matplotlib.use('Agg')
 import matplotlib.pyplot as plt

@@ -1,0 +1,13 @@
+{
+    "name": "FMGS Dev",
+    "image": "fmgs_image:latest",
+    "workspaceFolder": "/workspace",
+    "shutdownAction": "stopContainer",
+    "runArgs": [
+        "--gpus", "all",
+        "--shm-size=80gb",
+        "-p", "7007:7007",
+        "-v", "${localWorkspaceFolder}:/workspace",
+        "-v", "/home/${localEnv:USER}/.cache:/home/user/.cache"
+    ]
+}
