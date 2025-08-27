@@ -60,7 +60,8 @@ class FeatureDataloader(ABC):
         cache_info_path = self.cache_path.with_suffix(".info")
         with open(cache_info_path, "w") as f:
             f.write(json.dumps(self.cfg))
-        np.save(self.cache_path, self.data)
+        arr = self.data.detach().cpu().contiguous().numpy().astype(np.float32, copy=False)
+        np.save(self.cache_path, arr)
 
     def try_load(self, img_list: torch.Tensor):
         try:
