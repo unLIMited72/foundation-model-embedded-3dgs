@@ -20,6 +20,11 @@ class Dinov3Dataloader(FeatureDataloader):
     }
 
     def __init__(self, cfg: dict, device: torch.device, image_list: torch.Tensor, cache_path=None):
+        self.dino_model_type = cfg.get("model_type", self.dino_model_type)
+        self.dino_stride     = cfg.get("feat_stride", 14 if "h14" in self.dino_model_type else 16)
+        self.dino_load_size  = cfg.get("load_size", self.dino_load_size)
+        self.l2_normalize    = cfg.get("l2_normalize", self.l2_normalize)
+
         assert "image_shape" in cfg
         super().__init__(cfg, device, image_list, cache_path)
         del image_list
@@ -29,11 +34,17 @@ class Dinov3Dataloader(FeatureDataloader):
         return (h // s) * s, (w // s) * s
 
     def _prep_hf(self):
-        hf_id = self._hf_id_map.get(self.dino_model_type, None)
+        hf_id = self._hf_id_map.get(self.dino_model_type)
         if hf_id is None:
             raise ValueError(f"Unknown dino_model_type: {self.dino_model_type}")
         self.processor = AutoImageProcessor.from_pretrained(hf_id)
         self.model = AutoModel.from_pretrained(hf_id).to(self.device).eval()
+
+        patch = getattr(self.model.config, "patch_size", None)
+        if isinstance(patch, (tuple, list)):
+            patch = patch[0]
+        if isinstance(patch, int):
+            self.dino_stride = patch
 
     def create(self, image_list: torch.Tensor):
         self._prep_hf()
