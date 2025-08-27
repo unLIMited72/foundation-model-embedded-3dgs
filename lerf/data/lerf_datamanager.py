@@ -50,7 +50,9 @@ class LERFFeatManager:  # pylint: disable=abstract-method
         image_encoder: BaseImageEncoder,
         device: Union[torch.device, str] = "cpu",
         use_dinov3: bool = True,
-        dino_model_type: str = "dinov3_vitb16"
+        dino_model_type: str = "dinov3_vitb16",
+        dino_l2_normalize: Optional[bool] = None,
+        dino_load_size: Optional[int] = None,
     ):
 
         self.image_encoder = image_encoder
@@ -65,17 +67,22 @@ class LERFFeatManager:  # pylint: disable=abstract-method
         clip_cache_path = Path(osp.join(cache_dir, f"clip_{self.image_encoder.name}"))
 
         if use_dinov3:
+            feat_stride = 14 if "h14" in dino_model_type else 16
             dino_cache_path = Path(osp.join(cache_dir, f"dino_{dino_model_type}.npy"))
+            cfg = {
+                "image_shape": list(images.shape[2:4]),
+                "model_type": dino_model_type,
+                "feat_stride": feat_stride,
+            }
+            if dino_load_size is not None:
+                cfg["load_size"] = dino_load_size
+            if dino_l2_normalize is not None:
+                cfg["l2_normalize"] = dino_l2_normalize
+
             self.dino_dataloader = DinoV3(
                 image_list=images,
                 device=self.device,
-                cfg={
-                    "image_shape": list(images.shape[2:4]),
-                    "model_type": dino_model_type,
-                    "feat_stride": DinoV3.dino_stride,
-                    "load_size": DinoV3.dino_load_size,
-                    "l2_normalize": DinoV3.l2_normalize,
-                },
+                cfg=cfg,
                 cache_path=dino_cache_path,
             )
         else:
