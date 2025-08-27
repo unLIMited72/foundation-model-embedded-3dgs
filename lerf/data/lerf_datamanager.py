@@ -24,7 +24,8 @@ from pathlib import Path
 from typing import Any, Dict, List, Optional, Tuple, Type, Union
 
 import torch
-from lerf.data.utils.dino_dataloader import DinoDataloader
+from lerf.data.utils.dino_dataloader import DinoDataloader as DinoV1V2
+from lerf.data.utils.dinov3_dataloader import Dinov3Dataloader as DinoV3
 from lerf.data.utils.pyramid_embedding_dataloader import PyramidEmbeddingDataloader
 from lerf.encoders.image_encoder import BaseImageEncoder
 
@@ -47,7 +48,9 @@ class LERFFeatManager:  # pylint: disable=abstract-method
         dataname: str,
         input_scene: Scene,
         image_encoder: BaseImageEncoder,
-        device: Union[torch.device, str] = "cpu"
+        device: Union[torch.device, str] = "cpu",
+        use_dinov3: bool = True,
+        dino_model_type: str = "dinov3_vitb16"
     ):
 
         self.image_encoder = image_encoder
@@ -60,14 +63,31 @@ class LERFFeatManager:  # pylint: disable=abstract-method
 
         cache_dir = f"outputs/{dataname}"
         clip_cache_path = Path(osp.join(cache_dir, f"clip_{self.image_encoder.name}"))
-        dino_cache_path = Path(osp.join(cache_dir, f"dino_{DinoDataloader.dino_model_type}.npy"))
-        # NOTE: cache config is sensitive to list vs. tuple, because it checks for dict equality
-        self.dino_dataloader = DinoDataloader(
-            image_list=images,
-            device=self.device,
-            cfg={"image_shape": list(images.shape[2:4])},
-            cache_path=dino_cache_path,
-        )
+
+        if use_dinov3:
+            dino_cache_path = Path(osp.join(cache_dir, f"dino_{dino_model_type}.npy"))
+            self.dino_dataloader = DinoV3(
+                image_list=images,
+                device=self.device,
+                cfg={
+                    "image_shape": list(images.shape[2:4]),
+                    "model_type": dino_model_type,
+                    "feat_stride": DinoV3.dino_stride,
+                    "load_size": DinoV3.dino_load_size,
+                    "l2_normalize": DinoV3.l2_normalize,
+                },
+                cache_path=dino_cache_path,
+            )
+        else:
+            dino_cache_path = Path(osp.join(cache_dir, f"dino_{DinoV1V2.dino_model_type}.npy"))
+            # NOTE: cache config is sensitive to list vs. tuple, because it checks for dict equality
+            self.dino_dataloader = DinoV1V2(
+                image_list=images,
+                device=self.device,
+                cfg={"image_shape": list(images.shape[2:4])},
+                cache_path=dino_cache_path,
+            )
+        
         torch.cuda.empty_cache()
         self.clip_interpolator = PyramidEmbeddingDataloader(
             image_list=images,
