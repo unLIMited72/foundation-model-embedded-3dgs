@@ -93,7 +93,7 @@ def training(dataset, opt, pipe, testing_iterations, saving_iterations, checkpoi
         lerf_image_encoder_config = OpenCLIPNetworkConfig(clip_model_type="ViT-B-16", clip_model_pretrained="laion2b_s34b_b88k", clip_n_dims=512)
         # print("for debug, lerf_image_encoder_config.negatives, clip_model_type: ", lerf_image_encoder_config.negatives, lerf_image_encoder_config.clip_model_pretrained, lerf_image_encoder_config.clip_model_type)
         lerf_image_encoder = OpenCLIPNetwork(lerf_image_encoder_config)
-        lerf_featmap_manger = LERFFeatManager(dataname, scene, lerf_image_encoder, device="cuda")
+        lerf_featmap_manger = LERFFeatManager(dataname, scene, lerf_image_encoder, device="cuda", use_dinov3=args.use_dinov3, dino_model_type=args.dino_model_type, dino_l2_normalize=args.dino_l2_normalize, dino_load_size=args.dino_load_size)
 
     bg_color = [1, 1, 1] if dataset.white_background else [0, 0, 0]
     background = torch.tensor(bg_color, dtype=torch.float32, device="cuda")
@@ -533,6 +533,12 @@ if __name__ == "__main__":
     parser.add_argument("--quiet", action="store_true")
     parser.add_argument("--checkpoint_iterations", nargs="+", type=int, default=[])
     parser.add_argument("--start_checkpoint", type=str, default = None)
+    parser.add_argument('--use_dinov3', dest='use_dinov3', action='store_true', help='Use DINOv3 feature backend')
+    parser.add_argument("--dino_model_type", type=str, default="dinov3_vitb16", choices=["dinov3_vitb16", "dinov3_vitl16", "dinov3_vith14"], help="DINOv3 backbone to use when --use_dinov3 is enabled.")
+    parser.add_argument('--no-use_dinov3', dest='use_dinov3', action='store_false', help='Use legacy DINO (v1/v2)')
+    parser.add_argument('--dino_l2_normalize', action='store_true', default=False)
+    parser.add_argument('--dino_load_size', type=int, default=500)
+    parser.set_defaults(use_dinov3=True)
     args = parser.parse_args(sys.argv[1:])
     args.save_iterations.append(args.iterations)
     
